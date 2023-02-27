@@ -24,7 +24,20 @@ public:
 	UFUNCTION(CallInEditor)
 	void RenameSelectedAssets(FString SearchPattern, FString ReplacePatter, ESearchCase::Type SearchCase);
 	
+	/*
+	* Checks textured to make sure they are a Power of 2
+	*/
+	UFUNCTION(CallInEditor)
+	void CheckPowerOfTwo();
+
 private:
+
+	/*
+	* Checks if NumberToCheck is a power of two
+	* @param NumberToCheck - Number to check
+	* @return Bool - True or False
+	*/
+	bool IsPowerOfTwo(int32 NumberToCheck);
 
 	/*
 	* Prints a message to the screen

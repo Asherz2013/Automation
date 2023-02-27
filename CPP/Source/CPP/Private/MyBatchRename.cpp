@@ -3,6 +3,7 @@
 
 #include "MyBatchRename.h"
 #include "EditorUtilityLibrary.h"
+#include "Engine/texture.h"
 
 
 #pragma region RenameAssets
@@ -36,9 +37,61 @@ void UMyBatchRename::RenameSelectedAssets(FString SearchPattern, FString Replace
     GiveFeedback(TEXT("Rename"), Count);
 }
 
+
+#pragma endregion
+
+#pragma region CheckPowerOfTwo
+
+void UMyBatchRename::CheckPowerOfTwo()
+{
+    // Get all the assets the user has selected
+    TArray<UObject*> SelectedObjects = UEditorUtilityLibrary::GetSelectedAssets();
+
+    uint32 Count = 0;
+
+    // Check each asset if it needs to be renamed
+    for (UObject* SelectedObject : SelectedObjects)
+    {
+        if (ensure(SelectedObject))
+        {
+            UTexture* texture = dynamic_cast<UTexture*>(SelectedObject);
+            if (ensure(texture))
+            {
+                int32 Width = static_cast<int32>(texture->GetSurfaceWidth());
+                int32 Height = static_cast<int32>(texture->GetSurfaceHeight());
+
+                if (!IsPowerOfTwo(Width) || !IsPowerOfTwo(Height))
+                {
+                    PrintToScreen(SelectedObject->GetPathName() + " is not a power of 2 texture.", FColor::Red);
+                }
+                else
+                {
+                    Count++;
+                }
+            }
+            else
+            {
+                PrintToScreen(SelectedObject->GetPathName() + " is not a texture.", FColor::Red);
+            }
+        }
+    }
+
+    GiveFeedback("Power of Two", Count);
+}
+
 #pragma endregion
 
 #pragma region Helpers
+
+bool UMyBatchRename::IsPowerOfTwo(int32 NumberToCheck)
+{
+    if (NumberToCheck == 0)
+    {
+        return false;
+    }
+
+    return (NumberToCheck & (NumberToCheck -1)) == 0;
+}
 
 void UMyBatchRename::PrintToScreen(FString Message, FColor Colour)
 {
