@@ -30,6 +30,12 @@ public:
 	UFUNCTION(CallInEditor)
 	void CheckPowerOfTwo();
 
+	/*
+	* Puts assets into their appropriate folder
+	*/
+	UFUNCTION(CallInEditor)
+		void CleanupFolder(FString ParentFolder = FString("/Game"));
+
 private:
 
 	/*

@@ -3,6 +3,7 @@
 
 #include "MyBatchRename.h"
 #include "EditorUtilityLibrary.h"
+#include "EditorAssetLibrary.h"
 #include "Engine/texture.h"
 
 
@@ -77,6 +78,43 @@ void UMyBatchRename::CheckPowerOfTwo()
     }
 
     GiveFeedback("Power of Two", Count);
+}
+
+#pragma endregion
+
+#pragma region CleanupFolder
+
+void UMyBatchRename::CleanupFolder(FString ParentFolder)
+{
+    if (!ParentFolder.StartsWith("/Game"))
+    {
+        ParentFolder = FPaths::Combine(TEXT("/Game"), ParentFolder);
+    }
+
+    // Get all the assets the user has selected
+    TArray<UObject*> SelectedObjects = UEditorUtilityLibrary::GetSelectedAssets();
+
+    uint32 Count = 0;
+
+    // Check each asset if it needs to be renamed
+    for (UObject* SelectedObject : SelectedObjects)
+    {
+        if (ensure(SelectedObject))
+        {
+            FString NewPath = FPaths::Combine(ParentFolder, SelectedObject->GetClass()->GetName(), SelectedObject->GetName());
+
+            if (UEditorAssetLibrary::RenameLoadedAsset(SelectedObject, NewPath))
+            {
+                ++Count;
+            }
+            else
+            {
+                PrintToScreen("Couldn't move " + SelectedObject->GetPathName(), FColor::Red);
+            }
+        }
+    }
+
+    GiveFeedback("Moved", Count);
 }
 
 #pragma endregion
