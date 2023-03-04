@@ -119,6 +119,34 @@ void UMyBatchRename::CleanupFolder(FString ParentFolder)
 
 #pragma endregion
 
+#pragma region DuplicateAssets
+
+void UMyBatchRename::DuplicateAssets(uint32 NumberOfDuplicates, bool bSave)
+{
+    TArray<FAssetData> AssetDataArray = UEditorUtilityLibrary::GetSelectedAssetData();
+
+    uint32 Count = 0;
+
+    for (FAssetData AssetData : AssetDataArray)
+    {
+        for (uint32 i = 0; i < NumberOfDuplicates; ++i)
+        {
+            FString NewFilename = AssetData.AssetName.ToString().AppendChar('_').Append(FString::FromInt(i));
+            FString NewPath = FPaths::Combine(AssetData.PackagePath.ToString(), NewFilename);
+            if (ensure(UEditorAssetLibrary::DuplicateAsset(AssetData.ObjectPath.ToString(), NewPath)))
+            {
+                ++Count;
+                if (bSave)
+                {
+                    UEditorAssetLibrary::SaveAsset(NewPath, false);
+                }
+            }
+        }
+    }
+}
+
+#pragma endregion
+
 #pragma region Helpers
 
 bool UMyBatchRename::IsPowerOfTwo(int32 NumberToCheck)

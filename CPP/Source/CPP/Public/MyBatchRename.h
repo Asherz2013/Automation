@@ -34,7 +34,15 @@ public:
 	* Puts assets into their appropriate folder
 	*/
 	UFUNCTION(CallInEditor)
-		void CleanupFolder(FString ParentFolder = FString("/Game"));
+	void CleanupFolder(FString ParentFolder = FString("/Game"));
+
+	/*
+	* Dupliacate the number of assets NumberOfDuplicates times
+	* @param NumberOfDuplcates - How many times you want the selected assets to be duplicated by
+	* @param bSave - Automatically save the file
+	*/
+	UFUNCTION(CallInEditor)
+	void DuplicateAssets(uint32 NumberOfDuplicates, bool bSave);
 
 private:
 
