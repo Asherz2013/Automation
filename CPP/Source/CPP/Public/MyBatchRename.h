@@ -44,6 +44,15 @@ public:
 	UFUNCTION(CallInEditor)
 	void DuplicateAssets(uint32 NumberOfDuplicates, bool bSave);
 
+	/*
+	* Nish Special - Nish asked me to create an Asset Duplicated that applies suffix's and duplicates assets
+	* @param Skylight - Do you want this Suffix to be applied
+	* @param Lighting - Do you want this Suffix to be applied
+	* @param SomeOther - Do you want thsi Suffix to be applied
+	*/
+	UFUNCTION(CallInEditor)
+	void NishSpecial(bool bSkylight, bool bLighting, bool bSomeOther, bool bSave);
+
 private:
 
 	/*

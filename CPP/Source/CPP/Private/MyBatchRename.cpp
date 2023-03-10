@@ -133,9 +133,66 @@ void UMyBatchRename::DuplicateAssets(uint32 NumberOfDuplicates, bool bSave)
         {
             FString NewFilename = AssetData.AssetName.ToString().AppendChar('_').Append(FString::FromInt(i));
             FString NewPath = FPaths::Combine(AssetData.PackagePath.ToString(), NewFilename);
-            if (ensure(UEditorAssetLibrary::DuplicateAsset(AssetData.ObjectPath.ToString(), NewPath)))
+
+            if (ensure(UEditorAssetLibrary::DuplicateAsset(AssetData.GetObjectPathString(), NewPath)))
             {
                 ++Count;
+                if (bSave)
+                {
+                    UEditorAssetLibrary::SaveAsset(NewPath, false);
+                }
+            }
+        }
+    }
+}
+
+#pragma endregion
+
+#pragma region NishSpecial
+
+void UMyBatchRename::NishSpecial(bool bSkylight, bool bLighting, bool bSomeOther, bool bSave)
+{
+    TArray<FAssetData> AssetDataArray = UEditorUtilityLibrary::GetSelectedAssetData();
+
+    uint32 Count = 0;
+
+    for (FAssetData AssetData : AssetDataArray)
+    {
+        if (bSkylight)
+        {
+            FString NewFilename = AssetData.AssetName.ToString().AppendChar('_').Append("_skylight");
+            FString NewPath = FPaths::Combine(AssetData.PackagePath.ToString(), NewFilename);
+
+            if (ensure(UEditorAssetLibrary::DuplicateAsset(AssetData.GetObjectPathString(), NewPath)))
+            {
+                if (bSave)
+                {
+                    UEditorAssetLibrary::SaveAsset(NewPath, false);
+                }
+            }
+        }
+
+        if (bLighting)
+        {
+            FString NewFilename = AssetData.AssetName.ToString().AppendChar('_').Append("_lighting");
+            FString NewPath = FPaths::Combine(AssetData.PackagePath.ToString(), NewFilename);
+
+            if (ensure(UEditorAssetLibrary::DuplicateAsset(AssetData.GetObjectPathString(), NewPath)))
+            {
+                if (bSave)
+                {
+                    UEditorAssetLibrary::SaveAsset(NewPath, false);
+                }
+            }
+        }
+
+        if (bSomeOther)
+        {
+            FString NewFilename = AssetData.AssetName.ToString().AppendChar('_').Append("_something");
+            FString NewPath = FPaths::Combine(AssetData.PackagePath.ToString(), NewFilename);
+
+            if (ensure(UEditorAssetLibrary::DuplicateAsset(AssetData.GetObjectPathString(), NewPath)))
+            {
                 if (bSave)
                 {
                     UEditorAssetLibrary::SaveAsset(NewPath, false);
