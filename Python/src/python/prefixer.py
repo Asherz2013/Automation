@@ -1,4 +1,5 @@
 import unreal
+import json
 
 #instances of unreal classes
 system_lib = unreal.SystemLibrary()
@@ -12,23 +13,10 @@ prefixed = 0
 
 unreal.log("Selected {} assets".format(num_assets))
 
-prefix_mapping = {
-    "Blueprint": "BP_",
-    "StaticMesh": "SM_",
-    "Material": "M_",
-    "MaterialInstanceConstant": "MI_",
-    "MaterialFucntion": "MF_",
-    "ParticleSystem": "PS_",
-    "SoundCue": "SC_",
-    "SoundWave": "S_",
-    "Texture2D": "T_",
-    "WidgetBlueprint": "WBP_",
-    "MorphTarget": "MT_",
-    "SkeletalMesh": "SK_",
-    "RenderTarget": "RT_",
-    "TextureRenderTarget2D": "TRT_",
-    "MediaPlayer": "MP_"
-}
+prefix_mapping = {}
+
+with open("C:\\Users\\ash_s\\Documents\\Unreal Projects\\5.1\\Automation\\Python\\src\\python\\prefix_mapping.json", "r") as json_file:
+    prefix_mapping = json.loads(json_file.read())
 
 # loop over each asset and rename
 for asset in selected_assets:
@@ -50,7 +38,7 @@ for asset in selected_assets:
         # rename the asset and add prefix
         new_name = class_prefix + asset_name
         editor_util.rename_asset(asset, new_name)
-        prefixed += 
+        prefixed += 1
         unreal.log("Prefixed {} of type {} with {}".format(asset_name, class_name, class_prefix))
     else:
         unreal.log("Asset {} of type {} is already prefixed with {}".format(asset_name, class_name, class_prefix))
