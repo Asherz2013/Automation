@@ -4,6 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "AssetActionUtility.h"
+
+#include "Materials/Material.h"
+#include "Materials/MaterialInstance.h"
+#include "Particles/ParticleSystem.h"
+#include "Sound/Soundcue.h"
+#include "Sound/SoundWave.h"
+#include "Engine/Texture.h"
+#include "Blueprint/UserWidget.h"
+#include "Animation/MorphTarget.h"
+#include "Components/SkeletalMeshComponent.h"
+
 #include "MyBatchRename.generated.h"
 
 /**
@@ -53,7 +64,30 @@ public:
 	UFUNCTION(CallInEditor)
 	void NishSpecial(bool bSkylight, bool bLighting, bool bSomeOther, bool bSave);
 
+	/*
+	* Automatically re-names all the selected files to have the UE prefix terminology
+	* The Prefix data comes from a JSON file
+	*/
+	UFUNCTION(CallInEditor)
+	void AutoPrefix();
+
 private:
+
+	const TMap<UClass*, FString> PrefixMap = {
+		{UBlueprint::StaticClass(), TEXT("BP_")},
+		{UStaticMesh::StaticClass(), TEXT("SM_")},
+		{UMaterial::StaticClass(), TEXT("M_")},
+		{UMaterialInstance::StaticClass(), TEXT("MI_")},
+		{UMaterialFunctionInterface::StaticClass(), TEXT("MF_")},
+		{UParticleSystem::StaticClass(), TEXT("PS_")},
+		{USoundCue::StaticClass(), TEXT("SC_")},
+		{USoundWave::StaticClass(), TEXT("S_")},
+		{UTexture::StaticClass(), TEXT("T_")},
+		{UTexture2D::StaticClass(), TEXT("T_")},
+		{UUserWidget::StaticClass(), TEXT("UWB_")},
+		{UMorphTarget::StaticClass(), TEXT("MT_")},
+		{USkeletalMeshComponent::StaticClass(), TEXT("SK_")}
+	};
 
 	/*
 	* Checks if NumberToCheck is a power of two

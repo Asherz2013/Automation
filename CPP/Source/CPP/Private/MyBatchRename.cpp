@@ -204,6 +204,43 @@ void UMyBatchRename::NishSpecial(bool bSkylight, bool bLighting, bool bSomeOther
 
 #pragma endregion
 
+#pragma region AutoPrefix
+
+void UMyBatchRename::AutoPrefix()
+{
+    // Get all the assets the user has selected
+    TArray<UObject*> SelectedObjects = UEditorUtilityLibrary::GetSelectedAssets();
+
+    uint32 Count = 0;
+
+    for (UObject* SelectedObject : SelectedObjects)
+    {
+        if (ensure(SelectedObject))
+        {
+            const FString* Prefix = PrefixMap.Find(SelectedObject->GetClass());
+
+            if (ensure(Prefix) && !Prefix->IsEmpty())
+            {
+                FString OldName = SelectedObject->GetName();
+                if (!OldName.StartsWith(*Prefix))
+                {
+                    FString NewName = *Prefix + OldName;
+                    UEditorUtilityLibrary::RenameAsset(SelectedObject, NewName);
+                    ++Count;
+                }
+            }
+            else
+            {
+                PrintToScreen("Couldn't find prefix for class " + SelectedObject->GetClass()->GetName(), FColor::Red);
+            }
+        }
+    }
+
+    GiveFeedback("Added prefix to", Count);
+}
+
+#pragma endregion
+
 #pragma region Helpers
 
 bool UMyBatchRename::IsPowerOfTwo(int32 NumberToCheck)
