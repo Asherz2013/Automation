@@ -2,7 +2,7 @@
 
 
 #include "MyEditorUtilityWidget.h"
-#include "EditorLevelLibrary.h"
+#include "Subsystems/EditorActorSubsystem.h"
 
 void UMyEditorUtilityWidget::Test()
 {
@@ -11,7 +11,7 @@ void UMyEditorUtilityWidget::Test()
 
 void UMyEditorUtilityWidget::OrganiseWorldOuliner()
 {
-    TArray<AActor*> AllActors = UEditorLevelLibrary().GetAllLevelActors();
+    TArray<AActor*> AllActors = UEditorActorSubsystem().GetAllLevelActors();
 
     for (AActor* Actor : AllActors)
     {
